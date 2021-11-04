@@ -1,0 +1,80 @@
+{
+	"short_name": "My Movie",
+	"name": "My Movie",
+	"lang": "en",
+	"description": "Movies",
+	"start_url": "https://your-domain.co.id",
+	"background_color": "#003366",
+	"theme_color": "#003366",
+	"dir": "ltr",
+	"display": "standalone",
+	"orientation": "any",
+	"icons": [
+		{
+			"src": "/images/icon/android-icon-192x192-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/images/icon/apple-icon-180x180-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "180x180"
+		},
+		{
+			"src": "/images/icon/apple-icon-152x152-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "152x152"
+		},
+		{
+			"src": "/images/icon/apple-icon-144x144-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "144x144"
+		},
+		{
+			"src": "/images/icon/apple-icon-120x120-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "120x120"
+		},
+		{
+			"src": "/images/icon/apple-icon-114x114-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "114x114"
+		},
+		{
+			"src": "/images/icon/favicon-96x96-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "96x96"
+		},
+		{
+			"src": "/images/icon/apple-icon-76x76-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "76x76"
+		},
+		{
+			"src": "/images/icon/apple-icon-72x72-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "72x72"
+		},
+		{
+			"src": "/images/icon/apple-icon-60x60-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "60x60"
+		},
+		{
+			"src": "/images/icon/apple-icon-57x57-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "57x57"
+		},
+		{
+			"src": "/images/icon/favicon-32x32-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "32x32"
+		},
+		{
+			"src": "/images/icon/favicon-16x16-manifest-31222.png",
+			"type": "image/png",
+			"sizes": "16x16"
+		}
+	],
+	"prefer_related_applications": "false"
+}
