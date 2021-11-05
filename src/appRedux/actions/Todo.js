@@ -3,6 +3,7 @@ import {
 	TODO_LIST,
 	TODO_ITEM_LOADING,
 	TODO_ITEM_LIST,
+	TODO_ITEM_SORTER
 } from "@constants/ActionTypes";
 import axios from "@util/Api";
 import RouteAccess from "@config/RouteAccess";
@@ -111,5 +112,60 @@ export const deleteItem = (id, callback) =>
 		} catch(error) {
 			dispatch(setError(error));
 		}
+	}
+}
+
+export const sortItems = (value) =>
+{
+	return (dispatch, getState) =>
+	{
+		const {todo} = getState();
+		const {item_data} = todo;
+
+		if (item_data && item_data.length)
+		{
+			switch (value)
+			{
+				case 'newest':
+					item_data.sort((a, b) => {
+					    if (a.id < b.id) return -1;
+					    if (a.id > b.id) return 1;
+					    return 0;
+					});
+				break;
+				case 'oldest':
+					item_data.sort((a, b) => {
+					    if (a.id > b.id) return -1;
+					    if (a.id < b.id) return 1;
+					    return 0;
+					});
+				break;
+				case 'az':
+					item_data.sort((a, b) => {
+					    if (a.title < b.title) return -1;
+					    if (a.title > b.title) return 1;
+					    return 0;
+					});
+				break;
+				case 'za':
+					item_data.sort((a, b) => {
+					    if (a.title > b.title) return -1;
+					    if (a.title < b.title) return 1;
+					    return 0;
+					});
+				break;
+				case 'unifinished':
+					item_data.sort((a, b) => {
+					    if (a.is_active > b.is_active) return -1;
+					    if (a.is_active < b.is_active) return 1;
+					    return 0;
+					});
+				break;
+				default:
+					return null;
+			}
+		}
+
+		dispatch({type: TODO_ITEM_SORTER, payload: value});
 	}
 }

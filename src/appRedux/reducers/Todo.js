@@ -3,6 +3,7 @@ import {
 	TODO_LIST,
 	TODO_ITEM_LOADING,
 	TODO_ITEM_LIST,
+	TODO_ITEM_SORTER
 } from "@constants/ActionTypes";
 
 const INIT_STATE = {
@@ -10,6 +11,7 @@ const INIT_STATE = {
 	data: null,
     item_loading: false,
 	item_data: null,
+	item_sorter: null,
 };
 
 export default (state = INIT_STATE, action) =>
@@ -30,6 +32,10 @@ export default (state = INIT_STATE, action) =>
 
         case TODO_ITEM_LIST: {
             return {...state, item_data: action.payload};
+        }
+        
+        case TODO_ITEM_SORTER: {
+            return {...state, item_sorter: action.payload};
         }
 
         default:

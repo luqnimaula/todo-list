@@ -6,6 +6,6 @@ import Detail from "./Detail";
 export default memo(({match}) => (
     <Switch>
         <Route exact path={`${match.url}`} component={ToDo}/>
-        <Route path={`${match.url}/detail`} component={Detail}/>
+        <Route path={`${match.url}detail`} component={Detail}/>
     </Switch>
 ));

@@ -9,4 +9,5 @@ export const ON_HIDE_LOADER = 'ON_HIDE_LOADER';
 export const TODO_LOADING = 'TODO_LOADING';
 export const TODO_LIST = 'TODO_LIST';
 export const TODO_ITEM_LOADING = 'TODO_ITEM_LOADING';
+export const TODO_ITEM_SORTER = 'TODO_ITEM_SORTER';
 export const TODO_ITEM_LIST = 'TODO_ITEM_LIST';

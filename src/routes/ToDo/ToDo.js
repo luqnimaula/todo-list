@@ -13,7 +13,7 @@ const ActivityItem = memo(({data}) =>
 	return (
 		<div data-cy="activity-item"
 		className="todo-card todo-w-100">
-			<Link to={`/todo/detail/${id}`}>
+			<Link to={`/detail/${id}`}>
 				<div className="todo-card-body">
 					<h4 data-cy="activity-item-title"
 					className="todo-card-item-title todo-mt-0">

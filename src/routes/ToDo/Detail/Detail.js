@@ -6,7 +6,7 @@ import {LoadingOutlined} from "@ant-design/icons";
 import axios from "@util/Api";
 import RouteAccess from "@config/RouteAccess";
 import {setError} from "@reduxActions/Common";
-import {getTodoItems, setActiveItem, deleteItem, resetTodoItems} from "@reduxActions/Todo";
+import {getTodoItems, setActiveItem, deleteItem, resetTodoItems, sortItems} from "@reduxActions/Todo";
 
 const FormItem = Form.Item;
 const {Option} = Select;
@@ -159,37 +159,46 @@ const ItemDelete = memo(({id, title}) =>
 const sorterList = [
 	{
 		title: 'Terbaru',
+		value: 'newest',
 		icon: 'todo-icon-sort-desc',
 	},
 	{
 		title: 'Terlama',
+		value: 'oldest',
 		icon: 'todo-icon-sort-asc',
 	},
 	{
 		title: 'A-Z',
+		value: 'az',
 		icon: 'todo-icon-sort-asc-alp',
 	},
 	{
 		title: 'Z-A',
+		value: 'za',
 		icon: 'todo-icon-sort-desc-alp',	
 	},
 	{
 		title: 'Belum Selesai',
+		value: 'unifinished',
 		icon: 'todo-icon-sort-unfinished',
 	},
 ];
 
 const Sorters = memo(() =>
 {
+	const dispatch = useDispatch();
+	const {item_sorter} = useSelector(({todo}) => todo);
+
 	const menu = (
-	  	<Menu data-cy="sort-parent">
-	  		{sorterList.map(({title, icon}, index) => (
+	  	<Menu data-cy="sort-parent" onClick={({key}) => dispatch(sortItems(key))}>
+	  		{sorterList.map(({title, icon, value}) => (
 			    <Menu.Item
-			    key={index}
+			    key={value}
 			    className="todo-py-2 todo-px-3"
 			    data-cy="sort-selection">
 			    	{icon && <span className={`${icon} todo-mr-2`} data-cy="sort-selection-icon"/>}
 			    	<span data-cy="sort-selection-title">{title}</span>
+			    	{item_sorter === value && <Icon type="check" className="todo-ml-3" data-cy="sort-selection-selected"/>}
 			    </Menu.Item>
 	  		))}
 	  	</Menu>
