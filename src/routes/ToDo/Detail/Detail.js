@@ -1,12 +1,13 @@
 import React, {memo, useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useParams, useHistory} from "react-router-dom";
-import {Row, Col, Modal, Dropdown, Menu, Icon, Form, Select, Input, Checkbox} from "antd";
+import {Row, Col, Modal, Dropdown, Menu, Icon, Form, Select, Input, Checkbox, Divider} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
 import axios from "@util/Api";
 import RouteAccess from "@config/RouteAccess";
 import {setError} from "@reduxActions/Common";
 import {getTodoItems, setActiveItem, deleteItem, resetTodoItems, sortItems} from "@reduxActions/Todo";
+import $ from "jquery";
 
 const FormItem = Form.Item;
 const {Option} = Select;
@@ -115,6 +116,10 @@ const ItemDelete = memo(({id, title}) =>
 		}));
 	}
 
+    setTimeout(() => {
+        $('.modal-delete-item > .ant-modal-content').attr('data-cy', 'modal-delete');
+    }, 1);
+
 	return (
 		<React.Fragment>
 			{deleting ? <LoadingOutlined className="todo-fs-xl"/> : (
@@ -127,8 +132,12 @@ const ItemDelete = memo(({id, title}) =>
 			footer={null}
 			visible={show}
 			closable={false}
-			onCancel={handleShow}>
-				<div className="todo-w-100 todo-text-center"
+			onCancel={handleShow}
+			className="modal-delete-item"
+			bodyStyle={{padding: 0}}
+			transitionName=""
+			maskTransitionName="">
+				<div className="todo-w-100 todo-text-center todo-p-4"
 				data-cy="modal-delete">
 					<Icon
 					type="warning"
@@ -190,9 +199,10 @@ const Sorters = memo(() =>
 	const {item_sorter} = useSelector(({todo}) => todo);
 
 	const menu = (
-	  	<Menu data-cy="sort-parent" onClick={({key}) => dispatch(sortItems(key))}>
+	  	<Menu data-cy="sort-parent">
 	  		{sorterList.map(({title, icon, value}) => (
 			    <Menu.Item
+			    onClick={() => dispatch(sortItems(value))}
 			    key={value}
 			    className="todo-py-2 todo-px-3"
 			    data-cy="sort-selection">
@@ -206,7 +216,11 @@ const Sorters = memo(() =>
 
 	return (
 		<React.Fragment>
-			<Dropdown overlay={menu} trigger={["click"]}>
+			<Dropdown
+			overlay={menu}
+			trigger={["click"]} 
+            transitionName=""
+            maskTransitionName="">
 				<button className="todo-btn-sort todo-pointer" data-cy="todo-sort-button">
 					<span className="todo-icon-sort"/>
 				</button>
@@ -225,11 +239,13 @@ const AddState = Form.create()(memo(({form}) =>
 	const handleShow = () => setShow((value) => !value);
 
 	const [loading, setLoading] = useState(false);
-	const onCreateItem = () =>
+	const [allowSubmit, setAllowSubmit] = useState(false);
+	const onCreateItem = (e) =>
 	{
+		if (e) e.preventDefault();
 		validateFields((error, values) =>
 		{
-			if (!error)
+			if (!error && allowSubmit)
 			{
 				(async () => {
 					const payload = {
@@ -257,6 +273,21 @@ const AddState = Form.create()(memo(({form}) =>
 		if (show) setFieldsValue({name: '', priority: 'very-high'});
 	}, [show, setFieldsValue]);
 
+    setTimeout(() => {
+        $('.modal-add-item > .ant-modal-content').attr('data-cy', 'modal-add');
+    }, 1);
+
+    useEffect(() =>
+    {
+    	if (form.getFieldValue('name') && form.getFieldValue('priority')) {
+    		setAllowSubmit(true);
+    	} else {
+    		setAllowSubmit(false);
+    	}
+    },[form]);
+
+    console.log(allowSubmit);
+
 	return (
 		<React.Fragment>
 			<button
@@ -273,19 +304,15 @@ const AddState = Form.create()(memo(({form}) =>
 			onCancel={handleShow}
 			closable={!loading}
 			maskClosable={!loading}
-			footer={(
-				<button
-				className="todo-btn todo-btn-primary"
-				disabled={loading}
-				onClick={onCreateItem}
-				data-cy="modal-add-save-button">
-					{loading ? <span><LoadingOutlined className="todo-fs-lg todo-mr-3"/>Menyimpan</span> : 'Simpan'}
-				</button>
-			)}>
-                <Form layout="vertical">
+			className="modal-add-item"
+			bodyStyle={{padding: 0}}
+			transitionName=""
+			maskTransitionName=""
+			footer={null}>
+                <Form layout="vertical" onSubmit={onCreateItem} className="todo-py-4">
                 	<FormItem
                 	label={<span data-cy="modal-add-name-title">NAMA LIST ITEM</span>}
-                	className="gx-mb-2 todo-font-weight-semi-bold">
+                	className="gx-mb-2 todo-font-weight-semi-bold todo-px-4">
                         {getFieldDecorator('name', {
                             rules: [{
                                 required: true, 
@@ -301,7 +328,7 @@ const AddState = Form.create()(memo(({form}) =>
                     </FormItem>
                 	<FormItem
                 	label={<span data-cy="modal-add-priority-title">PRIORITY</span>}
-                	className="gx-mb-2 todo-font-weight-semi-bold">
+                	className="gx-mb-2 todo-font-weight-semi-bold todo-px-4">
                         {getFieldDecorator('priority', {
                             rules: [{
                                 required: true, 
@@ -313,7 +340,9 @@ const AddState = Form.create()(memo(({form}) =>
                         	disabled={loading}
                         	placeholder="Pilih priority"
                         	size="large"
-                        	data-cy="modal-add-priority-dropdown">
+                        	data-cy="modal-add-priority-dropdown"
+				            transitionName=""
+				            maskTransitionName="">
                         		{priorities.map(({title, value, styleName}, index) => (
 				              		<Option
 				              		value={value}
@@ -327,6 +356,16 @@ const AddState = Form.create()(memo(({form}) =>
 				            </Select>
                         )}
                     </FormItem>
+                    <Divider/>
+                    <div className="todo-w-100 todo-text-right todo-px-4">
+                    	<button
+						className="todo-btn todo-btn-primary"
+						disabled={loading || !allowSubmit}
+						type="submit"
+						data-cy="modal-add-save-button">
+							{loading ? <span><LoadingOutlined className="todo-fs-lg todo-mr-3"/>Menyimpan</span> : 'Simpan'}
+						</button>
+                    </div>
                 </Form>
 			</Modal>
 		</React.Fragment>
@@ -344,8 +383,9 @@ const EditState = Form.create()(memo(({form, data}) =>
 	const handleShow = () => setShow((value) => !value);
 
 	const [loading, setLoading] = useState(false);
-	const onCreateItem = () =>
+	const onEditItem = (e) =>
 	{
+		if (e) e.preventDefault();
 		validateFields((error, values) =>
 		{
 			if (!error)
@@ -386,15 +426,17 @@ const EditState = Form.create()(memo(({form, data}) =>
 			onCancel={handleShow}
 			closable={!loading}
 			maskClosable={!loading}
+			transitionName=""
+			maskTransitionName=""
 			footer={(
 				<button
 				className="todo-btn todo-btn-primary"
 				disabled={loading}
-				onClick={onCreateItem}>
+				onClick={onEditItem}>
 					{loading ? <span><LoadingOutlined className="todo-fs-lg todo-mr-3"/>Menyimpan</span> : 'Simpan'}
 				</button>
 			)}>
-                <Form layout="vertical">
+                <Form layout="vertical" onSubmit={onEditItem}>
                 	<FormItem
                 	label="NAMA LIST ITEM"
                 	className="gx-mb-2 todo-font-weight-semi-bold">
@@ -422,7 +464,9 @@ const EditState = Form.create()(memo(({form, data}) =>
                         	<Select
                         	disabled={loading}
                         	placeholder="Pilih priority"
-                        	size="large">
+                        	size="large"
+				            transitionName=""
+				            maskTransitionName="">
                         		{priorities.map(({title, value, styleName}, index) => (
 				              		<Option
 				              		value={value}
@@ -492,7 +536,7 @@ export default memo(() =>
 					<span
 					className="todo-icon-back todo-mr-2 todo-pointer"
 					data-cy="todo-back-button"
-					onClick={() => history.goBack()}/>
+					onClick={() => history.push('/')}/>
 					{editable ? (
 						<input
 						id="edit-activity-title"
@@ -500,6 +544,7 @@ export default memo(() =>
 						value={actTitle}
 						onChange={({target}) => setActTitle(target.value)}
 						className="todo-activity-edit todo-font-weight-semi-bold"
+						data-cy="todo-title"
 						onBlur={onChangeTitle}/>
 					) : (
 						<h1 className="todo-my-0 todo-font-weight-semi-bold"

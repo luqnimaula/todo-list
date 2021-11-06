@@ -6,14 +6,14 @@ import {LoadingOutlined} from "@ant-design/icons";
 import {createTodo, deleteTodo, getTodo} from "@reduxActions/Todo";
 import moment from "moment";
 import "moment/locale/id";
+import $ from "jquery";
 
 const ActivityItem = memo(({data}) =>
 {
 	const {id, title, created_at} = data;
 	return (
-		<div data-cy="activity-item"
-		className="todo-card todo-w-100">
-			<Link to={`/detail/${id}`}>
+		<div className="todo-card todo-w-100">
+			<Link to={`/detail/${id}`} data-cy="activity-item">
 				<div className="todo-card-body">
 					<h4 data-cy="activity-item-title"
 					className="todo-card-item-title todo-mt-0">
@@ -47,6 +47,10 @@ const ActivityDelete = memo(({id, title}) =>
 		dispatch(deleteTodo(id, () => setDeleting(false)));
 	}
 
+    setTimeout(() => {
+        $('.modal-delete-todo > .ant-modal-content').attr('data-cy', 'modal-delete');
+    }, 1);
+
 	return (
 		<React.Fragment>
 			{deleting ? <LoadingOutlined className="todo-fs-xl"/> : (
@@ -59,9 +63,13 @@ const ActivityDelete = memo(({id, title}) =>
 			footer={null}
 			visible={show}
 			closable={false}
-			onCancel={handleShow}>
+			onCancel={handleShow}
+			className="modal-delete-todo"
+			bodyStyle={{padding: 0}}
+			transitionName=""
+			maskTransitionName="">
 				<div
-				className="todo-w-100 todo-text-center"
+				className="todo-w-100 todo-text-center todo-p-4"
 				data-cy="modal-delete">
 					<Icon
 					type="warning"
@@ -128,26 +136,25 @@ export default memo(() =>
 					</button>
 				</div>
 			</div>
-			{loading ? (
+			{loading && (
 				<div className="todo-w-100 todo-text-center">
 					<LoadingOutlined className="todo-fs-icon-lg todo-text-primary"/>
 				</div>
-			) : (
-				<Row gutter={[8,8]}>
-					{(data && data.length) ? data.map((row, index) => (
-				        <Col xxl={6} xl={6} lg={6} md={8} sm={12} xs={24} key={index} className="todo-p-2">
-				        	<ActivityItem data={row}/>
-					    </Col>
-					)) : (
-						<Col span={24}>
-							<div className="todo-w-100 todo-text-center todo-wrapper-container">
-								<span className="todo-activity-empty"
-								data-cy="activity-empty-state"/>
-							</div>
-					    </Col>
-					)}
-				</Row>
 			)}
+			<Row gutter={[8,8]}>
+				{(data && data.length) ? data.map((row, index) => (
+			        <Col xxl={6} xl={6} lg={6} md={8} sm={12} xs={24} key={index} className="todo-p-2">
+			        	<ActivityItem data={row}/>
+				    </Col>
+				)) : (
+					<Col span={24}>
+						<div className="todo-w-100 todo-text-center todo-wrapper-container">
+							<span className="todo-activity-empty"
+							data-cy="activity-empty-state"/>
+						</div>
+				    </Col>
+				)}
+			</Row>
 		</div>
 	)
 });

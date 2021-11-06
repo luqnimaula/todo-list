@@ -9,6 +9,10 @@ body {
 	background-color: #f4f4f4;
 }
 
+/** {
+    animation-duration: 0s !important;
+}*/
+
 .@{class-prefix}-header {
 	height: 105px;
     background-color: @primary-color;
@@ -96,8 +100,13 @@ body {
 }
 
 .@{class-prefix}-btn-primary {
-	background-color: @primary-color !important;
-	color: white !important;
+	background-color: @primary-color;
+	color: white;
+}
+
+.@{class-prefix}-btn-primary:disabled {
+	background-color: #9e9e9e !important;
+	border-color: #9e9e9e !important;
 }
 
 .@{class-prefix}-btn-danger {
