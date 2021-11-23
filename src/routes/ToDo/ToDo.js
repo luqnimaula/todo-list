@@ -6,7 +6,7 @@ import {LoadingOutlined} from "@ant-design/icons";
 import {createTodo, deleteTodo, getTodo} from "@reduxActions/Todo";
 import moment from "moment";
 import "moment/locale/id";
-import $ from "jquery";
+// import $ from "jquery";
 
 const ActivityItem = memo(({data}) =>
 {
@@ -47,9 +47,9 @@ const ActivityDelete = memo(({id, title}) =>
 		dispatch(deleteTodo(id, () => setDeleting(false)));
 	}
 
-    setTimeout(() => {
-        $('.modal-delete-todo > .ant-modal-content').attr('data-cy', 'modal-delete');
-    }, 1);
+    // setTimeout(() => {
+    //     $('.modal-delete-todo > .ant-modal-content').attr('data-cy', 'modal-delete');
+    // }, 1);
 
 	return (
 		<React.Fragment>

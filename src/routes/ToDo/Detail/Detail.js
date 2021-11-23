@@ -286,8 +286,6 @@ const AddState = Form.create()(memo(({form}) =>
     	}
     },[form]);
 
-    console.log(allowSubmit);
-
 	return (
 		<React.Fragment>
 			<button
